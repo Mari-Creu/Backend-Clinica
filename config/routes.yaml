@@ -1,0 +1,46 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+
+#RUTAS CONTROLADOR USUARIO#
+img:
+    path: /img/{imagen}
+    controller: App\Controller\UsuarioController::recogerimagen
+    methods: [GET]
+usuario:
+    path: /usuario
+    controller: App\Controller\UsuarioController::index
+registro:
+    path: /registro
+    controller: App\Controller\UsuarioController::create
+    methods: [POST]
+login:
+    path: /login
+    controller: App\Controller\UsuarioController::login
+    methods: [POST]
+update:
+    path: /update
+    controller: App\Controller\UsuarioController::update
+    methods: [POST]
+list:
+    path: /list
+    controller: App\Controller\UsuarioController::findAll
+    methods: [GET]
+upload:
+    path: /upload/{id}
+    controller: App\Controller\UsuarioController::upload
+    methods: [POST]
+
+findById:
+    path: /findById
+    controller: App\Controller\UsuarioController::findById
+    methods: [POST]
+
+#RUTAS CONTROLADOR ADMINISTRADOR
+admin:
+    path: /admin
+    controller: App\Controller\AdministradorController::index
+createAdmin:
+    path: /createAdmin
+    controller: App\Controller\AdministradorController::createAdmin
+    methods: [POST]

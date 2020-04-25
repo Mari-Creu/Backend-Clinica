@@ -1,0 +1,162 @@
+<?php
+
+namespace App\Services;
+
+
+use App\Entity\Rol;
+use App\Entity\Usuario;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Validation;
+
+class UsuarioService
+{
+
+    public $manager;
+
+    public function __construct($manager)
+    {
+        $this->manager = $manager;
+    }
+
+    public function createUsuario($json, $jwtAuth, $idRol = 1)
+    {
+        $params = json_decode($json);
+        $user_repo = $this->manager->getRepository(Usuario::class);
+
+        $nombre = (!empty($params->nombre)) ? $params->nombre : null;
+        $password = (!empty($params->password)) ? $params->password : null;
+        $email = (!empty($params->email)) ? $params->email : null;
+        $apellidos = (!empty($params->apellidos)) ? $params->apellidos : null;
+
+        $validator = Validation::createValidator();
+        $validate_email = $validator->validate($email, [
+            new Email()
+        ]);
+        $isset_user = $user_repo->findBy(array(
+            'email' => $params->email
+        ));
+
+
+        if (!empty($email) && count($validate_email) == 0 && !empty($password)) {
+            $rol_repo = $this->manager->getRepository(Rol::class);
+            switch ($idRol) {
+                case 1:
+                    $rol = $rol_repo->find(1);
+                    break;
+                case 2:
+                    $rol = $rol_repo->find(2);
+                    break;
+                case 3:
+                    $rol = $rol_repo->find(3);
+                    break;
+            }
+        }
+        $usuario = new Usuario();
+        $usuario->setNombre($nombre);
+        $usuario->setApellidos($apellidos);
+        $usuario->setEmail($email);
+        $pwd = hash('sha256', $password);
+        $usuario->setPassword($pwd);
+        $usuario->setRol($rol);
+        $usuario->setCreateat(new \DateTime('now'));
+
+
+        if (count($isset_user) == 0) {
+
+
+            $this->manager->persist($usuario);
+            $this->manager->flush();
+            $token = $jwtAuth->signup($email, $pwd, true);
+
+            $data = [
+                'status' => 'success',
+                'code' => 201,
+                'msg' => 'Usuario creado',
+                'token' => $token
+            ];
+        } else {
+            $data = [
+                'status' => 'error',
+                'code' => 400,
+                'msg' => 'Usuario ya existe'
+            ];
+        }
+        return $data;
+    }
+
+    public function updateUsuario($idUsuario, $json)
+    {
+        $user_repo = $this->manager->getRepository(Usuario::class);
+        $usuario = $user_repo->findOneBy([
+            'id' => $idUsuario->id
+        ]);
+        $params = json_decode($json);
+        if (!empty($json)) {
+            $nombre = (!empty($params->nombre)) ? $params->nombre : null;
+            $apellidos = (!empty($params->apellidos)) ? $params->apellidos : null;
+            if ($usuario->getEmail() == $params->email) {
+                $usuario->setNombre($nombre);
+                $usuario->setApellidos($apellidos);
+                $this->manager->persist($usuario);
+                $this->manager->flush();
+                $data = [
+                    'status' => 'succes',
+                    'msg' => 'Usuario actualizado',
+                    'code' => '200',
+                    'usuario' => $usuario
+                ];
+            } else {
+                $data = [
+                    'status' => 'error',
+                    'msg' => 'Usuario no actualizado, error en los nuevos datos',
+                    'code' => '400',
+                ];
+            }
+            return $data;
+        }
+    }
+
+    public function findById($json)
+    {
+        $user_repo = $this->manager->getRepository(Usuario::class);
+        $usuario = $user_repo->findOneBy([
+            'id' => $json
+        ]);
+        $usuario->setPassword(':)');
+        $usuario->setRol(null);
+        $data = [
+            'usuario' => $usuario
+        ];
+        return $data;
+
+    }
+    public function updateFoto($id,$fileName){
+        $user_repo = $this->manager->getRepository(Usuario::class);
+        $usuario = $user_repo->findOneBy([
+            'id' => $id
+        ]);
+        if(!empty($usuario)){
+            if($usuario->getImagen()!=null){
+                unlink( './uploads/'.$usuario->getImagen());
+            }
+            $usuario->setImagen($fileName);
+            $this->manager->persist($usuario);
+            $this->manager->flush();
+            $data = [
+                'status' => 'success',
+                'msg' => 'Imagen actualizada!',
+                'code' => 200,
+                'usuario'=> $usuario
+            ];
+        }else{
+            $data = [
+                'status' => 'error',
+                'msg' => 'Error al actualizar la imagen!',
+                'code' => 400
+            ];
+        }
+
+        return $data;
+
+    }
+}
