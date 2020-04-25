@@ -32,6 +32,7 @@ class UsuarioController extends AbstractController
 
     public function index()
     {
+        //comento por ahcer commit en linux
 
         $user_repo = $this->getDoctrine()->getRepository(Usuario::class);
         $users = $user_repo->findAll();
