@@ -21,7 +21,7 @@ class JwtAuth
     }
 
 
-    public function signup($email, $password, $getToken = null)
+    public function signup($email, $password, $getToken = false)
     {
         $user = $this->manager->getRepository(Usuario::class)->findOneBy([
             'email' => $email,
@@ -44,12 +44,8 @@ class JwtAuth
                     'status' => 'success',
                     'code' => 200,
                     'msg' => 'Login Correcto',
-                    'id' => $user->getId(),
-                    'email' => $user->getEmail(),
-                    'nombre'=> $user->getNombre(),
-                    'password'=>':)',
-                    'rol'=> $user->getRol()->getId(),
-                    'token' => $jwt
+                    'token' => $jwt,
+                    'user'=>$user
                 ];
             } else {
                 $jwt_decoded = JWT::decode($jwt, $this->key, ['HS256']);

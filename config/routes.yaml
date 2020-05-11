@@ -25,7 +25,7 @@ update:
 list:
     path: /list
     controller: App\Controller\UsuarioController::findAll
-    methods: [GET]
+    methods: [POST]
 upload:
     path: /upload/{id}
     controller: App\Controller\UsuarioController::upload
@@ -44,3 +44,7 @@ createAdmin:
     path: /createAdmin
     controller: App\Controller\AdministradorController::createAdmin
     methods: [POST]
+deleteUser:
+    path: /deleteUser/{id}
+    controller: App\Controller\AdministradorController::deleteUser
+    methods: [DELETE]

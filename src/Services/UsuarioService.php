@@ -3,6 +3,8 @@
 namespace App\Services;
 
 
+use App\Entity\Administrador;
+use App\Entity\Paciente;
 use App\Entity\Rol;
 use App\Entity\Usuario;
 use Symfony\Component\Validator\Constraints\Email;
@@ -60,10 +62,7 @@ class UsuarioService
         $usuario->setRol($rol);
         $usuario->setCreateat(new \DateTime('now'));
 
-
         if (count($isset_user) == 0) {
-
-
             $this->manager->persist($usuario);
             $this->manager->flush();
             $token = $jwtAuth->signup($email, $pwd, true);
@@ -72,7 +71,8 @@ class UsuarioService
                 'status' => 'success',
                 'code' => 201,
                 'msg' => 'Usuario creado',
-                'token' => $token
+                'token' => $token,
+                'usuario'=>$usuario
             ];
         } else {
             $data = [
@@ -114,6 +114,7 @@ class UsuarioService
             }
             return $data;
         }
+        return null; //añadido por probar error wamp
     }
 
     public function findById($json)
@@ -129,6 +130,41 @@ class UsuarioService
         ];
         return $data;
 
+    }
+    public function deleteById($id){
+
+        $user_repo = $this->manager->getRepository(Usuario::class);
+        $admin_repo=$this->manager->getRepository(Administrador::class);
+        $usuario = $user_repo->findOneBy([
+            'id' => $id
+        ]);
+        $data=[
+            'status' => 'error',
+            'msg' => 'Error al borrar!',
+            'code' => 400
+        ];
+
+        if($usuario && is_object($usuario)){
+
+            if($usuario->getRol()->getId() ==1 ){
+                $paciente_repo = $this->manager->getRepository(Paciente::class);
+                $paciente=$paciente_repo->findOneBy([
+                    'id'=>$usuario
+                ]);
+               $this->manager->remove($paciente);
+               $this->manager->flush();
+                $this->manager->remove($usuario);
+                $this->manager->flush();
+                $data = [
+                    'status' => 'success',
+                    'msg' => 'usuario borrado!',
+                    'code' => 200,
+                    'usuario'=> $usuario
+                ];
+                return $data;
+            }
+
+        }
     }
     public function updateFoto($id,$fileName){
         $user_repo = $this->manager->getRepository(Usuario::class);

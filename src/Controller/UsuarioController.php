@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Validation;
 
@@ -29,6 +30,15 @@ class UsuarioController extends AbstractController
         $this->usuarioService = $usuarioService;
     }
 
+    public function resJson($data){
+          $json=$this->get('serializer')->serialize($data,'json');
+          $response = new Response();
+          $response->setContent($json);
+          $response->headers->set('Content-Type','application/json');
+          return $response;
+
+    }
+
 
     public function index()
     {
@@ -37,13 +47,15 @@ class UsuarioController extends AbstractController
         $users = $user_repo->findAll();
         $user = $user_repo->find(4);
 
-        return $this->json($users);
+        return $this->resJson($users);
 
     }
 
     public function create(Request $request, JwtAuth $jwtAuth)
     {
         $json = $request->getContent();
+        $params=json_decode($json);
+
         $data = [
             'status' => 'error',
             'code' => '500',
@@ -53,7 +65,7 @@ class UsuarioController extends AbstractController
         if ($json != null) {
             $data = $this->usuarioService->createUsuario($json, $jwtAuth, 1);
         }
-        return $this->json($data);
+        return new JsonResponse($data);
     }
 
     public function login(Request $request, JwtAuth $jwtAuth)
@@ -119,10 +131,12 @@ class UsuarioController extends AbstractController
         ];
         $token = $request->headers->get('Authorization', null);
         $auth_token = $jwtAuth->checkToken($token);
+        $rol=$request->get('rol',null);
+
         if ($auth_token) {
             $em = $this->getDoctrine()->getManager();
 
-            $dql = "SELECT u FROM App\Entity\Usuario u";
+            $dql = "SELECT u FROM App\Entity\Usuario u WHERE u.rol=".$rol;
             $query = $em->createQuery($dql);
 
             $page = $request->query->getInt('page', 1);
@@ -133,7 +147,7 @@ class UsuarioController extends AbstractController
             $total = $pagination->getTotalItemCount();
             $data = [
                 'status' => 'success',
-                'msg' => 'No se pueden listar los usuarios',
+                'msg' => 'Listado de usuarios paginado',
                 'code' => 200,
                 'total_items_count' => $total,
                 'page_actual' => $page,
@@ -205,7 +219,7 @@ class UsuarioController extends AbstractController
 
         // ... persist la variable $usuario o cualquier otra tarea
 
-        return $this->json($data);
+        return $this->resJson($data);
     }
 
     public function recogerimagen(Request $request)

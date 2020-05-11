@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="usuarios", uniqueConstraints={@ORM\UniqueConstraint(name="DNI", columns={"DNI"}), @ORM\UniqueConstraint(name="email", columns={"email"})}, indexes={@ORM\Index(name="rol", columns={"rol"})})
  * @ORM\Entity
  */
-class Usuario
+class Usuario implements \JsonSerializable
 {
     /**
      * @var int
@@ -201,4 +201,17 @@ class Usuario
     }
 
 
+    public function jsonSerialize()
+    {
+        // TODO: Implement jsonSerialize() method.
+        return [
+            'id'=> $this->id,
+            'nombre'=>$this->nombre,
+            'apellidos'=>$this->apellidos,
+            'email'=> $this->email,
+            'rol'=>$this->rol->getId(),
+            'password'=>':)',
+            'imagen'=>$this->imagen
+        ];
+    }
 }

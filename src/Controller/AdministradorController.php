@@ -61,4 +61,22 @@ class AdministradorController extends AbstractController
         }
         return $this->json($data);
     }
+    public function deleteUser(Request $request, JwtAuth $jwtAuth,$id=null){
+        $token = $request->headers->get('Authorization', null);
+        $authCheck = $jwtAuth->checkToken($token);
+        $data = [
+            'status' => 'error',
+            'code' => '500',
+            'msg' => 'No se ha podido borrar el usuario'
+        ];
+        if($authCheck) {
+            $identidadUsuario = $jwtAuth->checkToken($token, true);
+            if($identidadUsuario->rol==2){
+                if(!empty($id)){
+                    $data=$this->usuarioService->deleteById($id);
+                }
+            }
+        }
+        return $this->json($data);
+    }
 }
