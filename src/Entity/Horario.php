@@ -22,23 +22,23 @@ class Horario
     private $id;
 
     /**
-     * @var \DateTime
+     * @var int
      *
-     * @ORM\Column(name="horario_inicio", type="time", nullable=false)
+     * @ORM\Column(name="horario_inicio", type="integer", nullable=false)
      */
     private $horarioInicio;
 
     /**
-     * @var \DateTime
+     * @var int
      *
-     * @ORM\Column(name="hora_fin", type="time", nullable=false)
+     * @ORM\Column(name="hora_fin", type="integer", nullable=false)
      */
     private $horaFin;
 
     /**
-     * @var int
+     * @var int|null
      *
-     * @ORM\Column(name="cupos", type="integer", nullable=false)
+     * @ORM\Column(name="cupos", type="integer", nullable=true)
      */
     private $cupos;
 
@@ -47,24 +47,24 @@ class Horario
         return $this->id;
     }
 
-    public function getHorarioInicio(): ?\DateTimeInterface
+    public function getHorarioInicio(): ?int
     {
         return $this->horarioInicio;
     }
 
-    public function setHorarioInicio(\DateTimeInterface $horarioInicio): self
+    public function setHorarioInicio(int $horarioInicio): self
     {
         $this->horarioInicio = $horarioInicio;
 
         return $this;
     }
 
-    public function getHoraFin(): ?\DateTimeInterface
+    public function getHoraFin(): ?int
     {
         return $this->horaFin;
     }
 
-    public function setHoraFin(\DateTimeInterface $horaFin): self
+    public function setHoraFin(int $horaFin): self
     {
         $this->horaFin = $horaFin;
 
@@ -76,7 +76,7 @@ class Horario
         return $this->cupos;
     }
 
-    public function setCupos(int $cupos): self
+    public function setCupos(?int $cupos): self
     {
         $this->cupos = $cupos;
 

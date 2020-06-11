@@ -4,6 +4,7 @@ namespace App\Services;
 
 
 use App\Entity\Administrador;
+use App\Entity\Medico;
 use App\Entity\Paciente;
 use App\Entity\Rol;
 use App\Entity\Usuario;
@@ -20,7 +21,7 @@ class UsuarioService
         $this->manager = $manager;
     }
 
-    public function createUsuario($json, $jwtAuth, $idRol = 1)
+    public function createUsuario($json, $jwtAuth, $rol = 1)
     {
         $params = json_decode($json);
         $user_repo = $this->manager->getRepository(Usuario::class);
@@ -29,7 +30,7 @@ class UsuarioService
         $password = (!empty($params->password)) ? $params->password : null;
         $email = (!empty($params->email)) ? $params->email : null;
         $apellidos = (!empty($params->apellidos)) ? $params->apellidos : null;
-
+        $rol = (!empty($params->rol)) ? $params->rol : $rol;
         $validator = Validation::createValidator();
         $validate_email = $validator->validate($email, [
             new Email()
@@ -41,15 +42,16 @@ class UsuarioService
 
         if (!empty($email) && count($validate_email) == 0 && !empty($password)) {
             $rol_repo = $this->manager->getRepository(Rol::class);
-            switch ($idRol) {
+            $idrol=null;
+            switch ($rol) {
                 case 1:
-                    $rol = $rol_repo->find(1);
+                    $idrol = $rol_repo->find(1);
                     break;
                 case 2:
-                    $rol = $rol_repo->find(2);
+                    $idrol = $rol_repo->find(2);
                     break;
                 case 3:
-                    $rol = $rol_repo->find(3);
+                    $idrol = $rol_repo->find(3);
                     break;
             }
         }
@@ -59,21 +61,23 @@ class UsuarioService
         $usuario->setEmail($email);
         $pwd = hash('sha256', $password);
         $usuario->setPassword($pwd);
-        $usuario->setRol($rol);
+        $usuario->setRol($idrol);
         $usuario->setCreateat(new \DateTime('now'));
 
         if (count($isset_user) == 0) {
             $this->manager->persist($usuario);
             $this->manager->flush();
             $token = $jwtAuth->signup($email, $pwd, true);
-
+            $tipoUsuario= $this->createRolUsuario($rol,$email);
             $data = [
                 'status' => 'success',
                 'code' => 201,
                 'msg' => 'Usuario creado',
                 'token' => $token,
-                'usuario'=>$usuario
+                'usuario' => $usuario
             ];
+
+
         } else {
             $data = [
                 'status' => 'error',
@@ -82,6 +86,38 @@ class UsuarioService
             ];
         }
         return $data;
+    }
+
+    public function createRolUsuario(int $rol,String $email)
+    {
+        $user=null;
+        $user_repo=$this->manager->getRepository(Usuario::class);
+        $usuario = $user_repo->findOneBy([
+            'email' => $email
+        ]);
+        switch ($rol){
+            case 1:
+                $user = new Paciente();
+                $user->setId($usuario);
+//                $paciente_repo=$this->manager->getRepository(Paciente::class);
+                $this->manager->persist($user);
+                $this->manager->flush();
+
+                break;
+            case 2:
+                $user= new Administrador();
+                $user->setId($usuario);
+                $this->manager->persist($user);
+                $this->manager->flush();
+                break;
+            case 3:
+                $user= new Medico();
+                $user->setId($usuario);
+                $this->manager->persist($user);
+                $this->manager->flush();
+                break;
+        }
+        return $user;
     }
 
     public function updateUsuario($idUsuario, $json)
@@ -131,49 +167,53 @@ class UsuarioService
         return $data;
 
     }
-    public function deleteById($id){
+
+    public function deleteById($id)
+    {
 
         $user_repo = $this->manager->getRepository(Usuario::class);
-        $admin_repo=$this->manager->getRepository(Administrador::class);
+        $admin_repo = $this->manager->getRepository(Administrador::class);
         $usuario = $user_repo->findOneBy([
             'id' => $id
         ]);
-        $data=[
+        $data = [
             'status' => 'error',
             'msg' => 'Error al borrar!',
             'code' => 400
         ];
 
-        if($usuario && is_object($usuario)){
+        if ($usuario && is_object($usuario)) {
 
-            if($usuario->getRol()->getId() ==1 ){
+            if ($usuario->getRol()->getId() == 1) {
                 $paciente_repo = $this->manager->getRepository(Paciente::class);
-                $paciente=$paciente_repo->findOneBy([
-                    'id'=>$usuario
+                $paciente = $paciente_repo->findOneBy([
+                    'id' => $usuario
                 ]);
-               $this->manager->remove($paciente);
-               $this->manager->flush();
+                $this->manager->remove($paciente);
+                $this->manager->flush();
                 $this->manager->remove($usuario);
                 $this->manager->flush();
                 $data = [
                     'status' => 'success',
                     'msg' => 'usuario borrado!',
                     'code' => 200,
-                    'usuario'=> $usuario
+                    'usuario' => $usuario
                 ];
                 return $data;
             }
 
         }
     }
-    public function updateFoto($id,$fileName){
+
+    public function updateFoto($id, $fileName)
+    {
         $user_repo = $this->manager->getRepository(Usuario::class);
         $usuario = $user_repo->findOneBy([
             'id' => $id
         ]);
-        if(!empty($usuario)){
-            if($usuario->getImagen()!=null){
-                unlink( './uploads/'.$usuario->getImagen());
+        if (!empty($usuario)) {
+            if ($usuario->getImagen() != null) {
+                unlink('./uploads/' . $usuario->getImagen());
             }
             $usuario->setImagen($fileName);
             $this->manager->persist($usuario);
@@ -182,9 +222,9 @@ class UsuarioService
                 'status' => 'success',
                 'msg' => 'Imagen actualizada!',
                 'code' => 200,
-                'usuario'=> $usuario
+                'usuario' => $usuario
             ];
-        }else{
+        } else {
             $data = [
                 'status' => 'error',
                 'msg' => 'Error al actualizar la imagen!',

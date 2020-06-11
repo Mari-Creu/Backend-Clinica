@@ -17,7 +17,7 @@ class Medico
      *
      * @ORM\Column(name="fecha_contratacion", type="datetime", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
      */
-    private $fechaContratacion = 'CURRENT_TIMESTAMP';
+    private $fechaContratacion;
 
     /**
      * @var \DateTime|null

@@ -30,12 +30,13 @@ class UsuarioController extends AbstractController
         $this->usuarioService = $usuarioService;
     }
 
-    public function resJson($data){
-          $json=$this->get('serializer')->serialize($data,'json');
-          $response = new Response();
-          $response->setContent($json);
-          $response->headers->set('Content-Type','application/json');
-          return $response;
+    public function resJson($data)
+    {
+        $json = $this->get('serializer')->serialize($data, 'json');
+        $response = new Response();
+        $response->setContent($json);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
 
     }
 
@@ -55,7 +56,7 @@ class UsuarioController extends AbstractController
     public function create(Request $request, JwtAuth $jwtAuth)
     {
         $json = $request->getContent();
-        $params=json_decode($json);
+        $params = json_decode($json);
 
         $data = [
             'status' => 'error',
@@ -132,20 +133,25 @@ class UsuarioController extends AbstractController
         ];
         $token = $request->headers->get('Authorization', null);
         $auth_token = $jwtAuth->checkToken($token);
-        $rol=$request->get('rol',null);
+//        $rol=$request->get('rol',null);
+        $json = $request->getContent();
+        $params = json_decode($json);
+        $rol = $params->rol;
+        $termino = $params->termino;
+
 
         if ($auth_token) {
             $em = $this->getDoctrine()->getManager();
 
-            $dql = "SELECT u FROM App\Entity\Usuario u WHERE u.rol=".$rol;
+            $dql = "SELECT u FROM App\Entity\Usuario u WHERE u.rol=" . $rol . "AND u.email LIKE '%$termino%'";
             $query = $em->createQuery($dql);
-
             $page = $request->query->getInt('page', 1);
-
-            $items_per_page = 5;
+            $items_per_page = 10;
             $pagination = $paginator->paginate($query, $page, $items_per_page);
 
             $total = $pagination->getTotalItemCount();
+
+
             $data = [
                 'status' => 'success',
                 'msg' => 'Listado de usuarios paginado',
@@ -226,8 +232,8 @@ class UsuarioController extends AbstractController
     public function recogerimagen(Request $request)
     {
         $fileName = $request->get('imagen');
-        if($fileName== 'null'){
-            $fileName='fotonull.png';
+        if ($fileName == 'null') {
+            $fileName = 'fotonull.png';
         }
 //        $params = json_decode($json);
 //        $fileName = (!empty($params->imagen)) ? $params->imagen : 'fotonull.png';

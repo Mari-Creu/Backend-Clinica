@@ -22,10 +22,7 @@ update:
     path: /update
     controller: App\Controller\UsuarioController::update
     methods: [POST]
-list:
-    path: /list
-    controller: App\Controller\UsuarioController::findAll
-    methods: [POST]
+
 upload:
     path: /upload/{id}
     controller: App\Controller\UsuarioController::upload
@@ -48,3 +45,20 @@ deleteUser:
     path: /deleteUser/{id}
     controller: App\Controller\AdministradorController::deleteUser
     methods: [DELETE]
+list:
+    path: /list
+    controller: App\Controller\UsuarioController::findAll
+    methods: [POST]
+
+
+#RUTAS CONTROLADOR ESPECIALIDADES
+esspecialidades:
+    path: /especialidades
+    controller: App\Controller\EspecialidadController::getEspecialidades
+
+
+#RUTAS CONTROLADOR HORARIOS
+horarios:
+    path: /createHorario
+    controller: App\Controller\HorarioController::createHorario
+    methods: [POST]
