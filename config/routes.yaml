@@ -55,7 +55,7 @@ list:
 esspecialidades:
     path: /especialidades
     controller: App\Controller\EspecialidadController::getEspecialidades
-
+    methods: [GET]
 
 #RUTAS CONTROLADOR HORARIOS
 horarios:

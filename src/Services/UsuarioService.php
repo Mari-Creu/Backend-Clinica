@@ -25,7 +25,7 @@ class UsuarioService
     {
         $params = json_decode($json);
         $user_repo = $this->manager->getRepository(Usuario::class);
-
+         $data=['status'=>'error'];
         $nombre = (!empty($params->nombre)) ? $params->nombre : null;
         $password = (!empty($params->password)) ? $params->password : null;
         $email = (!empty($params->email)) ? $params->email : null;
@@ -40,9 +40,11 @@ class UsuarioService
         ));
 
 
+
         if (!empty($email) && count($validate_email) == 0 && !empty($password)) {
             $rol_repo = $this->manager->getRepository(Rol::class);
-            $idrol=null;
+
+            $idrol = null;
             switch ($rol) {
                 case 1:
                     $idrol = $rol_repo->find(1);
@@ -54,36 +56,39 @@ class UsuarioService
                     $idrol = $rol_repo->find(3);
                     break;
             }
-        }
-        $usuario = new Usuario();
-        $usuario->setNombre($nombre);
-        $usuario->setApellidos($apellidos);
-        $usuario->setEmail($email);
-        $pwd = hash('sha256', $password);
-        $usuario->setPassword($pwd);
-        $usuario->setRol($idrol);
-        $usuario->setCreateat(new \DateTime('now'));
 
-        if (count($isset_user) == 0) {
-            $this->manager->persist($usuario);
-            $this->manager->flush();
-            $token = $jwtAuth->signup($email, $pwd, true);
-            $tipoUsuario= $this->createRolUsuario($rol,$email);
-            $data = [
-                'status' => 'success',
-                'code' => 201,
-                'msg' => 'Usuario creado',
-                'token' => $token,
-                'usuario' => $usuario
-            ];
+            $usuario = new Usuario();
+            $usuario->setNombre($nombre);
+            $usuario->setApellidos($apellidos);
+            $usuario->setEmail($email);
+            $pwd = hash('sha256', $password);
+            $usuario->setPassword($pwd);
+            $usuario->setRol($idrol);
+            $usuario->setCreateat(new \DateTime('now'));
 
 
-        } else {
-            $data = [
-                'status' => 'error',
-                'code' => 400,
-                'msg' => 'Usuario ya existe'
-            ];
+            if (count($isset_user) == 0) {
+                $this->manager->persist($usuario);
+                $this->manager->flush();
+                $token = $jwtAuth->signup($email, $pwd, true);
+                $tipoUsuario = $this->createRolUsuario($rol, $email);
+                $data = [
+                    'status' => 'success',
+                    'code' => 201,
+                    'msg' => 'Usuario creado',
+                    'token' => $token,
+                    'usuario' => $usuario
+                ];
+
+
+            } else {
+                $data = [
+                    'status' => 'error',
+                    'code' => 400,
+                    'msg' => 'Usuario ya existe'
+                ];
+            }
+
         }
         return $data;
     }

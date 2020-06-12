@@ -67,7 +67,8 @@ class UsuarioController extends AbstractController
         if ($json != null) {
             $data = $this->usuarioService->createUsuario($json, $jwtAuth, 1);
         }
-        return new JsonResponse($data);
+
+        return $this->resJson($data);
     }
 
     public function login(Request $request, JwtAuth $jwtAuth)

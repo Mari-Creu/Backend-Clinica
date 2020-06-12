@@ -7,6 +7,7 @@ use App\Services\JwtAuth;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class HorarioController extends AbstractController
 {
@@ -20,7 +21,15 @@ class HorarioController extends AbstractController
     {
         $this->horarioService = $horarioService;
     }
+    public function resJson($data)
+    {
+        $json = $this->get('serializer')->serialize($data, 'json');
+        $response = new Response();
+        $response->setContent($json);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
 
+    }
 
     public function index()
     {
@@ -32,7 +41,7 @@ class HorarioController extends AbstractController
 
     public function createHorario(Request $request, JwtAuth $jwtAuth){
         $json =$request->getContent();
-        $params=json_decode($json);
+
         $data = [
             'status' => 'error',
             'code' => '500',
@@ -41,6 +50,6 @@ class HorarioController extends AbstractController
         if($json!=null){
             $data=$this->horarioService->createHorario($json,$jwtAuth);
         }
-        return new JsonResponse($data);
+        return $this->resJson($data);
     }
 }
