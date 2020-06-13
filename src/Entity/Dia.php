@@ -17,7 +17,7 @@ class Dia
      *
      * @ORM\Column(name="dia", type="string", length=1, nullable=false, options={"fixed"=true})
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
+
      */
     private $dia;
 
@@ -43,6 +43,12 @@ class Dia
      */
     private $medico;
 
+    public function setDia(int $dia): self
+    {
+        $this->dia = $dia;
+
+        return $this;
+    }
     public function getDia(): ?string
     {
         return $this->dia;

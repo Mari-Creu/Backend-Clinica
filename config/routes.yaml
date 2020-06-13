@@ -62,3 +62,16 @@ horarios:
     path: /createHorario
     controller: App\Controller\HorarioController::createHorario
     methods: [POST]
+
+
+#RUTAS CONTORLADOR DIAS
+dias:
+    path: /createDia
+    controller: App\Controller\DiaController:createDia
+    methods: [POST]
+
+#RUTAS CONTROLADOR MEDICOS
+updateMedico:
+    path: /updateMedico
+    controller: App\Controller\MedicoController::update
+    methods: [POST]

@@ -2,25 +2,27 @@
 
 namespace App\Controller;
 
-use App\Services\HorarioService;
 use App\Services\JwtAuth;
+use App\Services\MedicoService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
-class HorarioController extends AbstractController
+class MedicoController extends AbstractController
 {
-    private $horarioService;
+
+    private $medicoService;
 
     /**
-     * HorarioController constructor.
-     * @param $horarioService
+     * MedicoController constructor.
+     * @param $medicoService
      */
-    public function __construct(HorarioService $horarioService)
+    public function __construct(MedicoService $medicoService)
     {
-        $this->horarioService = $horarioService;
+        $this->medicoService = $medicoService;
     }
+
     public function resJson($data)
     {
         $json = $this->get('serializer')->serialize($data, 'json');
@@ -30,10 +32,7 @@ class HorarioController extends AbstractController
         return $response;
 
     }
-
-
-
-    public function createHorario(Request $request, JwtAuth $jwtAuth){
+    public function update(Request $request, JwtAuth $jwtAuth){
         $json =$request->getContent();
 
         $data = [
@@ -41,8 +40,9 @@ class HorarioController extends AbstractController
             'code' => '500',
             'msg' => 'Horario no creado'
         ];
-        if($json!=null){
-            $data=$this->horarioService->createHorario($json,$jwtAuth);
+
+        if(!empty($json)){
+            $data= $this->medicoService->update($json);
         }
         return $this->resJson($data);
     }
