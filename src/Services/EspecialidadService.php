@@ -21,10 +21,9 @@ class EspecialidadService
 
         $espe_repo = $this->manager->getRepository(Especialidad::class);
         $especialidades = $espe_repo->findAll();
-        var_dump($especialidades);
-        die();
+
         $data = [
-            'especialidades' => $this->json($especialidades)
+            'especialidades' => $especialidades
         ];
         return $data;
     }

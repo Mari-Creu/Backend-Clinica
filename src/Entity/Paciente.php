@@ -12,6 +12,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Paciente
 {
+
+    /**
+     * @var boolean|null
+     *
+     * @ORM\Column(name="baja", type="boolean",nullable=true)
+     */
+    private $baja;
     /**
      * @var string|null
      *
@@ -44,6 +51,20 @@ class Paciente
      * })
      */
     private $id;
+
+    public function getBaja(): ?bool
+    {
+        return $this->baja;
+    }
+
+    public function setBaja(?bool $baja): self
+    {
+        $this->baja = $baja;
+
+        return $this;
+    }
+
+
 
     public function getSeguridadSocial(): ?string
     {

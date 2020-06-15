@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Entity\Cita;
 use App\Entity\Especialidad;
 use App\Entity\Medico;
 use App\Entity\Usuario;
@@ -47,5 +48,51 @@ class MedicoService
             'medico'=> $issetMedico[0]
         ];
      }
+    public function consultarCitas($json){
+        $params=json_decode($json);
 
+        $citas_repo= $this->manager->getRepository(Cita::class);
+        $medico_repo= $this->manager->getRepository(Medico::class);
+
+        $dia= (!empty($params->dia)) ? $params->dia : null;
+        $medico= (!empty($params->medico)) ? $params->medico : null;
+        $issetMedico= $medico_repo->findBy(array(
+            'id' => $medico
+        ));
+
+//        $fecha= new DateTime( $dia);
+//        $fecha2=$fecha->format('d-m-Y');
+
+
+        $issetCitas= $citas_repo->findBy(array(
+            'fechaProgramada'=>$dia,
+            'medico' =>$issetMedico[0]
+        ));
+
+       $data=[
+            'status'=>'success',
+            'citas'=> $issetCitas
+        ];
+       return $data;
+
+    }
+    public  function buscarMedicos($json){
+        $params=json_decode($json);
+        $id=(!empty($params->id)) ? $params->id : null;
+        $nombre=(!empty($params->especialidad)) ? $params->especialidad : null;
+        $espe_repo = $this->manager->getRepository(Especialidad::class);
+        $isset_espe=$espe_repo->findBy(array(
+            'id'=>$id
+        ));
+        $medico_repo= $this->manager->getRepository(Medico::class);
+        $issetMedicos=$medico_repo->findBy(array(
+            'especialidad'=> $isset_espe[0]
+        ));
+        return $data=[
+            'status'=>'success',
+            'medicos'=> $issetMedicos
+        ];
+
+
+    }
 }

@@ -42,6 +42,7 @@ class UsuarioService
 
 
         if (!empty($email) && count($validate_email) == 0 && !empty($password)) {
+
             $rol_repo = $this->manager->getRepository(Rol::class);
 
             $idrol = null;

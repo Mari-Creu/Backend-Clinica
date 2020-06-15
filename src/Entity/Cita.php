@@ -22,16 +22,16 @@ class Cita
     private $id;
 
     /**
-     * @var bool|null
+     * @var string|null
      *
-     * @ORM\Column(name="urgencia", type="boolean", nullable=true, options={"default"="b'0'"})
+     * @ORM\Column(name="urgencia", type="string",  length=10000, nullable=true)
      */
     private $urgencia = 'b\'0\'';
 
     /**
-     * @var \DateTime
+     * @var string|null
      *
-     * @ORM\Column(name="fecha_programada", type="datetime", nullable=false)
+     * @ORM\Column(name="fecha_programada",type="string", length=100, nullable=false)
      */
     private $fechaProgramada;
 
@@ -45,9 +45,9 @@ class Cita
     /**
      * @var int|null
      *
-     * @ORM\Column(name="numero_orden", type="integer", nullable=true)
+     * @ORM\Column(name="hora_cita", type="integer", nullable=true)
      */
-    private $numeroOrden;
+    private $horaCita;
 
     /**
      * @var \Medico
@@ -74,24 +74,24 @@ class Cita
         return $this->id;
     }
 
-    public function getUrgencia(): ?bool
+    public function getUrgencia(): ?string
     {
         return $this->urgencia;
     }
 
-    public function setUrgencia(?bool $urgencia): self
+    public function setUrgencia(string $urgencia): self
     {
         $this->urgencia = $urgencia;
 
         return $this;
     }
 
-    public function getFechaProgramada(): ?\DateTimeInterface
+    public function getFechaProgramada(): ?string
     {
         return $this->fechaProgramada;
     }
 
-    public function setFechaProgramada(\DateTimeInterface $fechaProgramada): self
+    public function setFechaProgramada(string $fechaProgramada): self
     {
         $this->fechaProgramada = $fechaProgramada;
 
@@ -110,14 +110,14 @@ class Cita
         return $this;
     }
 
-    public function getNumeroOrden(): ?int
+    public function getHoraCita(): ?int
     {
-        return $this->numeroOrden;
+        return $this->horaCita;
     }
 
-    public function setNumeroOrden(?int $numeroOrden): self
+    public function setHoraCita(?int $horaCita): self
     {
-        $this->numeroOrden = $numeroOrden;
+        $this->horaCita = $horaCita;
 
         return $this;
     }

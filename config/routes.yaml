@@ -75,3 +75,24 @@ updateMedico:
     path: /updateMedico
     controller: App\Controller\MedicoController::update
     methods: [POST]
+consultaCitas:
+    path: /consultaCitasMedico
+    controller: App\Controller\MedicoController::consultarCitas
+    methods: [POST]
+buscarMedicos:
+    path: /buscarMedicosEspecialidad
+    controller: App\Controller\MedicoController::buscarMedicos
+    methods: [POST]
+
+
+#RUTAS CONTROLADOR CITAS
+createCita:
+    path: /createCita
+    controller: App\Controller\CitaController::create
+    methods: [POST]
+
+#RUTAS CONTROLADOR PACIENTES
+find:
+    path: /findPaciente/{id}
+    controller: App\Controller\PacienteController::findPaciente
+    methods: [GET]
