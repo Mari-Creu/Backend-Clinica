@@ -68,6 +68,24 @@ class Informe
      * })
      */
     private $medico;
+    /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="fecha_informe", type="datetime", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
+     */
+    private $fechaInforme = 'CURRENT_TIMESTAMP';
+
+    public function getFechaInforme(): ?\DateTimeInterface
+    {
+        return $this->fechaInforme;
+    }
+
+    public function setFechaInforme(?\DateTimeInterface $fechaInforme): self
+    {
+        $this->fechaInforme = $fechaInforme;
+
+        return $this;
+    }
 
     public function getId(): ?int
     {

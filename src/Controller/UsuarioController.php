@@ -56,8 +56,6 @@ class UsuarioController extends AbstractController
     public function create(Request $request, JwtAuth $jwtAuth)
     {
         $json = $request->getContent();
-        $params = json_decode($json);
-
         $data = [
             'status' => 'error',
             'code' => '500',

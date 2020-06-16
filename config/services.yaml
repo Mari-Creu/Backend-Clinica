@@ -51,6 +51,7 @@ services:
 
     App\Services\PacienteService: ['@doctrine.orm.entity_manager']
 
+    App\Services\InformeService: ['@doctrine.orm.entity_manager']
 
 
 knp_paginator:

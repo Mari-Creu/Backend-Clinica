@@ -28,4 +28,28 @@ class PacienteService
            'paciente'=>$issetPaciente
        ];
     }
+    public function putPaciente($json){
+        $params=json_decode($json);
+
+        $id=(!empty($params->id)) ? $params->id->id: null;
+        $mutua=(!empty($params->mutua)) ? $params->mutua: null;
+        $seguridadSocial=(!empty($params->seguridadSocial)) ? $params->seguridadSocial: null;
+        $bajaBoolean= !empty($params->baja) ? $params->baja: null;
+        $baja=($bajaBoolean)?1:0;
+       $userRepo=$this->manager->getRepository(Usuario::class);
+       $issetUsuario=$userRepo->findById($id);
+       $pacienteRepo=$this->manager->getRepository(Paciente::class);
+       $issetPaciente=$pacienteRepo->findById($issetUsuario);
+       $issetPaciente[0]->setMutua($mutua);
+       $issetPaciente[0]->setSeguridadSocial($seguridadSocial);
+       $issetPaciente[0]->setBaja(1);
+
+        $this->manager->persist($issetPaciente[0]);
+        $this->manager->flush();
+        return $data=[
+            'status'=>'success',
+            'code'=>200,
+            'paciente'=> $issetPaciente[0]
+        ];
+    }
 }

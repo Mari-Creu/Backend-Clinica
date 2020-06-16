@@ -96,3 +96,13 @@ find:
     path: /findPaciente/{id}
     controller: App\Controller\PacienteController::findPaciente
     methods: [GET]
+put:
+    path: /putPaciente
+    controller: App\Controller\PacienteController::putPaciente
+    methods: [PUT]
+
+#RUTAS CONTROLADOR INFORMES
+create:
+    path: /createInforme
+    controller: App\Controller\InformeController::createInforme
+    methods: [POST]

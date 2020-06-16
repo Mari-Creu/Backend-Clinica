@@ -47,4 +47,18 @@ class PacienteController extends AbstractController
         }
         return $this->resJson($data);
     }
+    public function putPaciente(Request $request, JwtAuth $jwtAuth){
+        $json = $request->getContent();
+
+        $data = [
+            'status' => 'error',
+            'code' => 500,
+            'msg' => 'Paciente no actualizado'
+        ];
+
+        if (!empty($json)) {
+            $data = $this->pacienteService->putPaciente($json);
+        }
+        return $this->resJson($data);
+    }
 }
