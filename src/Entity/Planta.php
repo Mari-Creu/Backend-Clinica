@@ -28,12 +28,7 @@ class Planta
      */
     private $nombre;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="observaciones", type="string", length=500, nullable=true)
-     */
-    private $observaciones;
+
 
     public function getId(): ?int
     {
@@ -52,17 +47,7 @@ class Planta
         return $this;
     }
 
-    public function getObservaciones(): ?string
-    {
-        return $this->observaciones;
-    }
 
-    public function setObservaciones(?string $observaciones): self
-    {
-        $this->observaciones = $observaciones;
-
-        return $this;
-    }
 
 
 }

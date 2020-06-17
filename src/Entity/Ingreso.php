@@ -36,9 +36,9 @@ class Ingreso
     private $fechaSalida;
 
     /**
-     * @var \Habitaciones
+     * @var \Habitacion
      *
-     * @ORM\ManyToOne(targetEntity="Habitaciones")
+     * @ORM\ManyToOne(targetEntity="Habitacion")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="habitacion_id", referencedColumnName="id")
      * })
@@ -84,12 +84,12 @@ class Ingreso
         return $this;
     }
 
-    public function getHabitacion(): ?Habitaciones
+    public function getHabitacion(): ?Habitacion
     {
         return $this->habitacion;
     }
 
-    public function setHabitacion(?Habitaciones $habitacion): self
+    public function setHabitacion(?Habitacion $habitacion): self
     {
         $this->habitacion = $habitacion;
 

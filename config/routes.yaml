@@ -106,3 +106,33 @@ create:
     path: /createInforme
     controller: App\Controller\InformeController::createInforme
     methods: [POST]
+getInformes:
+    path: /getInformes/{id}
+    controller: App\Controller\InformeController::getInformes
+    methods: [GET]
+
+
+#RUTAS CONTROLADOR HABITACIONES
+getHabitacion:
+    path: /getHabitacion
+    controller: App\Controller\HabitacionController::getHabitacion
+    methods: [GET]
+putHabitacion:
+    path: /putHabitacion
+    controller: App\Controller\HabitacionController::putHabitacion
+    methods: [PUT]
+
+#RUTAS CONTROLADOR INGRESOS
+createIngreso:
+    path: /createIngreso
+    controller: App\Controller\IngresoController::createIngreso
+    methods: [POST]
+findIngreso:
+    path: /findIngreso/{id}
+    controller: App\Controller\IngresoController::findIngreso
+    methods: [GET]
+putIngreso:
+    path: /putIngreso
+    controller: App\Controller\IngresoController::putIngreso
+    methods: [PUT]
+

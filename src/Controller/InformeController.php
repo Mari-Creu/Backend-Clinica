@@ -46,4 +46,18 @@ class InformeController extends AbstractController
 
         return $this->resJson($data);
     }
+    public function getInformes(Request $request, JwtAuth $jwtAuth, $id=null){
+        $json = $request->getContent();
+        $data = [
+            'status' => 'error',
+            'code' => '500',
+            'msg' => 'Error al buscar los informes'
+        ];
+
+        if ($id != null) {
+            $data = $this->informeService->getInformes($id);
+        }
+
+        return $this->resJson($data);
+    }
 }

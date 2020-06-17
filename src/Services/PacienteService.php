@@ -42,7 +42,7 @@ class PacienteService
        $issetPaciente=$pacienteRepo->findById($issetUsuario);
        $issetPaciente[0]->setMutua($mutua);
        $issetPaciente[0]->setSeguridadSocial($seguridadSocial);
-       $issetPaciente[0]->setBaja(1);
+       $issetPaciente[0]->setBaja($baja);
 
         $this->manager->persist($issetPaciente[0]);
         $this->manager->flush();

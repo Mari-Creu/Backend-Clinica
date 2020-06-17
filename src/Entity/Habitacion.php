@@ -38,6 +38,25 @@ class Habitacion
      */
     private $planta;
 
+    /**
+     * @var boolean|null
+     *
+     * @ORM\Column(name="ocupada", type="boolean",nullable=true)
+     */
+    private $ocupada;
+
+    public function getOcupada(): ?bool
+    {
+        return $this->ocupada;
+    }
+
+    public function setOcupada(?bool $ocupada): self
+    {
+        $this->ocupada = $ocupada;
+
+        return $this;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
