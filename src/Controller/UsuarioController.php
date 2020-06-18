@@ -250,4 +250,19 @@ class UsuarioController extends AbstractController
     }
 //$filename = "TextFile.txt";
 //
+
+    public function putUsuario(Request $request, JwtAuth $jwtAuth){
+        $json = $request->getContent();
+
+        $data = [
+            'status' => 'error',
+            'code' => 500,
+            'msg' => 'Usuario no actualizado'
+        ];
+
+        if (!empty($json)) {
+            $data = $this->usuarioService->putUsuario($json);
+        }
+        return $this->resJson($data);
+    }
 }

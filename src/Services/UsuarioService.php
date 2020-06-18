@@ -241,4 +241,27 @@ class UsuarioService
         return $data;
 
     }
+    public function putUsuario($json){
+        $params=json_decode($json);
+
+        $id=(!empty($params->id)) ? $params->id: null;
+
+        $userRepo=$this->manager->getRepository(Usuario::class);
+        $issetUsuario=$userRepo->findOneById($id);
+        $nombre=(!empty($params->nombre)) ? $params->nombre: null;
+        $apellidos=(!empty($params->apellidos)) ? $params->apellidos: null;
+        $telefono=(!empty($params->telefono)) ? $params->telefono: null;
+        $issetUsuario->setNombre($nombre);
+        $issetUsuario->setApellidos($apellidos);
+        $issetUsuario->setTelefono($telefono);
+
+
+        $this->manager->persist($issetUsuario);
+        $this->manager->flush();
+        return $data=[
+            'status'=>'success',
+            'code'=>200,
+            'usuario'=> $issetUsuario
+        ];
+    }
 }

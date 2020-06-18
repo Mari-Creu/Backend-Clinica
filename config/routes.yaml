@@ -32,7 +32,10 @@ findById:
     path: /findById
     controller: App\Controller\UsuarioController::findById
     methods: [POST]
-
+putUsuario:
+    path: /putUsuario
+    controller: App\Controller\UsuarioController::putUsuario
+    methods: [PUT]
 #RUTAS CONTROLADOR ADMINISTRADOR
 admin:
     path: /admin
@@ -110,7 +113,14 @@ getInformes:
     path: /getInformes/{id}
     controller: App\Controller\InformeController::getInformes
     methods: [GET]
-
+getInformesMedico:
+    path: /getInformesPorMedico/{id}
+    controller: App\Controller\InformeController::getInformesPorMedico
+    methods: [GET]
+buscarInformes:
+    path: /buscarInformes
+    controller: App\Controller\InformeController::buscarInformes
+    methods: [POST]
 
 #RUTAS CONTROLADOR HABITACIONES
 getHabitacion:

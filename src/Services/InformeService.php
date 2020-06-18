@@ -71,4 +71,19 @@ class InformeService
             'informes'=>$issetInformes
         ];
     }
+    public function getInformesPorMedico($id){
+        $userRepo=$this->manager->getRepository(Usuario::class);
+        $issetUsuario=$userRepo->findOneById($id);
+        $medicoRepo=$this->manager->getRepository(Medico::class);
+        $issetMedico=$medicoRepo->findOneById($issetUsuario);
+        $informeRepo=$this->manager->getRepository(Informe::class);
+        $issetInformes=$informeRepo->findBy(array(
+            'medico'=>$issetMedico
+        )) ;
+        return $data=[
+            'status'=>'success',
+            'code'=>200,
+            'informes'=>$issetInformes
+        ];
+    }
 }
